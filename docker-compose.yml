@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./dockerfiles
+      dockerfile: backend-dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www:rw
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/public
+    stdin_open: true
