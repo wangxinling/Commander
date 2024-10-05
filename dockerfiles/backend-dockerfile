@@ -33,6 +33,6 @@ RUN chown -R www-data:www-data /var/www \
 # Update Apache configuration to use the correct DocumentRoot
 RUN sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf
 
-# Expose port 8080
+# Expose port 80
 EXPOSE 80
 

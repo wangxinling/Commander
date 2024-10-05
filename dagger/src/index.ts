@@ -19,8 +19,8 @@ import {
   Directory,
   Secret,
   object,
+  File,
   func,
-  Service,
 } from "@dagger.io/dagger"
 
 @object()
@@ -29,34 +29,9 @@ class Commander {
     * Return container image with application source code and dependencies
     */
   @func()
-  build(source: Directory): Container {
-    return dag
-      .container()
-      .from("php:8.2-apache-buster")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "--yes", "git-core", "zip", "curl"])
-      .withExec(["docker-php-ext-install", "pdo", "pdo_mysql", "mysqli"])
-      .withExec([
-        "sh",
-        "-c",
-        "sed -ri -e 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/*.conf",
-      ])
-      .withExec([
-        "sh",
-        "-c",
-        "sed -ri -e 's!/var/www/!/var/www/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf",
-      ])
-      .withExec(["a2enmod", "rewrite"])
-      .withDirectory("/var/www", source.withoutDirectory("dagger"), {
-        owner: "www-data",
-      })
-      .withWorkdir("/var/www")
-      .withExec(["chmod", "-R", "775", "/var/www"])
-      .withExec([
-        "sh",
-        "-c",
-        "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-      ])
+  async buildbackend(source: Directory,dockerfile:File): Promise<Container> {
+    const img = await this.buildDocker(dockerfile);
+    img.withDirectory("/var/www", source)
       .withMountedCache(
         "/root/.composer/cache",
         dag.cacheVolume("composer-cache"),
@@ -65,9 +40,22 @@ class Commander {
         "/var/www/vendor",
         dag.cacheVolume("composer-vendor-cache"),
       )
-      .withExec(["composer", "install"])
-  }
+      .withEnvVariable("CI_ENVIRONMENT", "production")
+      .withExposedPort(80)
 
+    return img
+  }
+  @func()
+  async buildDocker(dockerfile: File): Promise<Container> {
+    const img = await dag
+      .container()
+      .withFile(`/src/dockerfile`,dockerfile)
+      .withWorkdir("/src")
+      .directory("/src")
+      .dockerBuild() // build from Dockerfile
+
+    return img
+  }
   /*
     * Return result of unit tests
     */

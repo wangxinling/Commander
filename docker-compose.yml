@@ -11,4 +11,5 @@ services:
       - ./backend:/var/www:rw
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/public
+      - CI_ENVIRONMENT=development
     stdin_open: true
