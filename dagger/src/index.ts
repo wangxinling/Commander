@@ -21,17 +21,24 @@ import {
   object,
   File,
   func,
+  Service
 } from "@dagger.io/dagger"
 
 @object()
 class Commander {  
+  //dagger call buildbackend --source=. terminal --cmd=bash
+  //dagger call buildbackend --source=. as-service up --ports=8080:80
   /*
     * Return container image with application source code and dependencies
     */
   @func()
-  async buildbackend(source: Directory,dockerfile:File): Promise<Container> {
-    const img = await this.buildDocker(dockerfile);
-    img.withDirectory("/var/www", source)
+  buildbackend(source: Directory): Container {
+
+    const dockerpath = source.directory("/dockerfiles");
+    const sourcepath = source.directory("/backend");
+
+    return dag.container().build(dockerpath,{dockerfile:"backend-dockerfile"})
+      .withDirectory("/var/www", sourcepath)
       .withMountedCache(
         "/root/.composer/cache",
         dag.cacheVolume("composer-cache"),
@@ -40,11 +47,19 @@ class Commander {
         "/var/www/vendor",
         dag.cacheVolume("composer-vendor-cache"),
       )
-      .withEnvVariable("CI_ENVIRONMENT", "production")
+      .withEnvVariable("CI_ENVIRONMENT", "development")
+      .withEnvVariable("APACHE_DOCUMENT_ROOT","/var/www/public")
+      .withExec(["composer", "install", "--no-interaction"])
+      .withExec(["php", "spark", "serve"])
+      // TODO: port is not availble but it is OK for docker compose
       .withExposedPort(80)
 
-    return img
   }
+  @func()
+  backendService(source: Directory): Service {
+    return this.buildbackend(source).asService()
+  }
+  // build a docker file
   @func()
   async buildDocker(dockerfile: File): Promise<Container> {
     const img = await dag
@@ -56,40 +71,42 @@ class Commander {
 
     return img
   }
+
   /*
     * Return result of unit tests
     */
-  @func()
-  async test(source: Directory): Promise<string> {
-    return await this.build(source)
-      .withEnvVariable("PATH", "./vendor/bin:$PATH", { expand: true })
-      .withExec(["phpunit"])
-      .stdout()
-  }
+  // @func()
+  // async test(source: Directory): Promise<string> {
+  //   return await this.build(source)
+  //     .withEnvVariable("PATH", "./vendor/bin:$PATH", { expand: true })
+  //     .withExec(["phpunit"])
+  //     .stdout()
+  // }
 
   /*
     * Return address of published container image
     */
-  @func()
-  async publish(
-    source: Directory,
-    version: string,
-    registryAddress: string,
-    registryUsername: string,
-    registryPassword: Secret,
-    imageName: string,
-  ): Promise<string> {
-    const image = this.build(source)
-      .withLabel("org.opencontainers.image.title", "Laravel with Dagger")
-      .withLabel("org.opencontainers.image.version", version)
-    // uncomment this to use a custom entrypoint file
-    // .withExec(["chmod", "+x", "/var/www/docker-entrypoint.sh"])
-    // .withEntrypoint(["/var/www/docker-entrypoint.sh"])
+//   @func()
+//   async publish(
+//     source: Directory,
+//     version: string,
+//     registryAddress: string,
+//     registryUsername: string,
+//     registryPassword: Secret,
+//     imageName: string,
+//   ): Promise<string> {
+//     const image = this.build(source)
+//       .withLabel("org.opencontainers.image.title", "Laravel with Dagger")
+//       .withLabel("org.opencontainers.image.version", version)
+//     // uncomment this to use a custom entrypoint file
+//     // .withExec(["chmod", "+x", "/var/www/docker-entrypoint.sh"])
+//     // .withEntrypoint(["/var/www/docker-entrypoint.sh"])
 
-    const address = await image
-      .withRegistryAuth(registryAddress, registryUsername, registryPassword)
-      .publish(`${registryAddress}/${registryUsername}/${imageName}`)
+//     const address = await image
+//       .withRegistryAuth(registryAddress, registryUsername, registryPassword)
+//       .publish(`${registryAddress}/${registryUsername}/${imageName}`)
 
-    return address
-  }
+//     return address
+//   }
+
 }
