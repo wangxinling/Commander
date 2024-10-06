@@ -1,5 +1,5 @@
 version: '3'
-
+# Development evironment
 services:
   backend:
     depends_on:
@@ -44,6 +44,15 @@ services:
       MYSQL_ROOT_PASSWORD: mikewang
     networks:
       - commander-networking
+  # Client need copy package to backend
+  chatWeb:
+    image: node:latest
+    working_dir: "/home/node/app/frontend"
+    stdin_open: true
+    volumes: 
+      - ./:/home/node/app
+    ports:
+      - "8080:8080"
 
 networks:
   commander-networking:
