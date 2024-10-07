@@ -2,7 +2,15 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import FileManagerPlugin from 'filemanager-webpack-plugin';
+
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Change to parent directory
+const __parentDir = path.join(__dirname, '../backend/public');
+const __viewDir = path.join(__dirname, '../backend/app/Views');
 
 export default {
     mode: 'development',
@@ -12,13 +20,17 @@ export default {
         'dist/main.min': './main.js',
     },
     output: {
-        filename: '[name].js',
+        filename: '[name].[contenthash].js',
         path: __dirname,
         library: {
             type: 'module',
         },
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html',
+        }),
         // Copy .wasm files to dist folder
         new CopyWebpackPlugin({
             patterns: [
@@ -28,6 +40,19 @@ export default {
                 },
             ],
         }),
+        new FileManagerPlugin({
+            events: {
+              onEnd: {
+                copy: [
+                    { source:  path.resolve(__dirname,'dist/*'), destination: path.resolve(__parentDir,'dist/') },
+                    { source: 'index.html', destination: path.resolve(__viewDir,'index.html') },
+                  ],
+
+                },
+            },
+        }),
+
+       
     ],
     devServer: {
         static: {

@@ -6,6 +6,7 @@ import { marked } from 'marked';
 const MODELS = {
   "phi3": { name: "phi3", path: "microsoft/Phi-3-mini-4k-instruct-onnx-web", externaldata: true },
   "phi3dev": { name: "phi3dev", path: "schmuell/Phi-3-mini-4k-instruct-onnx-web", externaldata: true },
+  "llama3": { name: "llama3", path: "onnx-community/Llama-3.2-3B-Instruct-onnx-web", externaldata: true}
 }
 
 const preCannedQueries = {
@@ -171,7 +172,7 @@ document.getElementById('user-input').addEventListener('keydown', function (e) {
 function getConfig() {
   const query = window.location.search.substring(1);
   var config = {
-    model: "phi3",
+    model: "llama3",
     provider: "webgpu",
     profiler: 0,
     verbose: 0,
