@@ -45,9 +45,9 @@ services:
     networks:
       - commander-networking
   # Client need copy package to backend
-  chatWeb:
+  webllm:
     image: node:latest
-    working_dir: "/home/node/app/frontend"
+    working_dir: "/home/node/app/webllm"
     stdin_open: true
     volumes: 
       - ./:/home/node/app
