@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="./index.css" />
- <script type="module" src="jsfiles/index.59889c3c5361d6fcc2fa.js"></script></head>
+ <script type="module" src="jsfiles/index.0347ac457564babb382e.js"></script></head>
 
   <body>
     <p>Step 1: Initialize WebLLM and Download Model</p>
@@ -22,6 +22,18 @@
       <div class="chat-input-container">
         <input type="text" id="user-input" placeholder="Type a message..." />
         <button id="send" disabled>Send</button>
+      </div>
+    </div>
+ 
+     <!-- get history from backend by backbone -->
+    <p>Check history</p>
+    <div id="history">
+      <div class="download-container">
+        <button id="load">Load History</button>
+        <button id="clean">Clean History</button>
+      </div>
+      <div id="history-box" class="chat-box">
+
       </div>
     </div>
 

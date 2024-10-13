@@ -47,7 +47,7 @@ services:
   # Client need copy package to backend
   webllm:
     image: node:latest
-    working_dir: "/home/node/app/webllm"
+    working_dir: "/home/node/app"
     stdin_open: true
     volumes: 
       - ./:/home/node/app

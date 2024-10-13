@@ -1,4 +1,6 @@
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+import HistoryView from "./views/HistoryView.js"
+import HistoryList  from "./models/historyList.js";
 
 /*************** WebLLM logic ***************/
 const messages = [
@@ -95,6 +97,9 @@ function onMessageSend() {
       `decoding: ${usage.extra.decode_tokens_per_s.toFixed(4)} tokens/sec`;
     document.getElementById("chat-stats").classList.remove("hidden");
     document.getElementById("chat-stats").textContent = usageText;
+
+    // TODO: save it to backend by backbone
+
   };
 
   streamingGenerating(
@@ -148,3 +153,8 @@ document.getElementById("download").addEventListener("click", function () {
 document.getElementById("send").addEventListener("click", function () {
   onMessageSend();
 });
+
+// history using backbone and database
+var historyData = new HistoryList();
+
+var history = new HistoryView({model:historyData});

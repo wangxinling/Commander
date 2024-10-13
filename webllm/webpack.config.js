@@ -31,7 +31,8 @@ export default {
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: '../index.html',
-            scriptLoading: 'module'
+            scriptLoading: 'module',
+            templateParameters: false
         }),
         new FileManagerPlugin({
             events: {
