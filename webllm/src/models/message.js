@@ -2,12 +2,11 @@
 import {Model} from 'backbone';
 
 const Message = Model.extend({
+    url: 'http://localhost/api/history',
     defaults() {
         return {
-            id: null,
             role: '',
             content:'',
-            timestamp: null,
         };
     },
 

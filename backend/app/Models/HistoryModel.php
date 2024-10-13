@@ -12,7 +12,7 @@ class HistoryModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ["role","content","timestamp"];
+    protected $allowedFields    = ["role","content"];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

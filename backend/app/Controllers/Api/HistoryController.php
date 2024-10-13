@@ -9,6 +9,7 @@ use App\Models\HistoryModel;
 class HistoryController extends ResourceController
 {
     protected $modelName = "App\Models\HistoryModel";
+    protected $format = "json";
 
     public function index()
     {
@@ -22,12 +23,12 @@ class HistoryController extends ResourceController
     // post method to add history
     public function addHistory()
     {
-        $data = $this->request->getPost();
+        $data = $this->request->getJSON(true);
 
-        $user = isset($data['user']) ? $data['name'] : "";
-        $content = isset($data['content']) ? $data['email'] : "";
+        $role = isset($data['role']) ? $data['role'] : "";
+        $content = isset($data['content']) ? $data['content'] : "";
 
-        if(empty($user) || empty($content)) {
+        if(empty($role) || empty($content)) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Missing required fields']);
         }
         if($this->model->insert($data)) {

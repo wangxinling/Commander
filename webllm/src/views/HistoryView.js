@@ -19,18 +19,18 @@ const HistoryView = View.extend({
 
     },
     render: function () {
-        this.$("history-box").remove();
+        this.$("#history-box").empty();
         this.addAll();
 
     },
     addOne: function (message) {
-        var message = new MessageView({ model: message });
-        this.$("history-box").append(message.render().el);
+        var messageView = new MessageView({ model: message });
+        this.$("#history-box").append(messageView.render().el);
 
     },
     addAll: function () {
         if(this.model.length > 0) {
-            this.models.each(this.addOne, this);
+            this.model.each(this.addOne, this);
         };
     },
 
