@@ -1,6 +1,7 @@
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 import HistoryView from "./views/HistoryView.js"
 import HistoryList  from "./models/historyList.js";
+import Message from "./models/message.js";
 
 /*************** WebLLM logic ***************/
 const messages = [
@@ -98,7 +99,6 @@ function onMessageSend() {
     document.getElementById("chat-stats").classList.remove("hidden");
     document.getElementById("chat-stats").textContent = usageText;
 
-    // TODO: save it to backend by backbone
 
   };
 
@@ -127,6 +127,10 @@ function appendMessage(message) {
   container.appendChild(newMessage);
   chatBox.appendChild(container);
   chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the latest message
+
+   // TODO: save it to backend by backbone
+
+   
 }
 
 function updateLastMessage(content) {
