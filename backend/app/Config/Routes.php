@@ -15,7 +15,7 @@ $routes->get('news/(:segment)', [News::class, 'show']); // Add this line
 $routes->group("api", ["namespace" => "App\Controllers\Api"], function ($routes) {
     $routes->get('history', [HistoryController::class, 'getAllHistory']);
     $routes->post('history', [HistoryController::class, 'addHistory']);
-    $routes->delete('history', [HistoryController::class, 'deleteHistory']);
+    $routes->delete('history/(:num)', [HistoryController::class, 'deleteHistory']);
 });
 
 // $routes->get('pages', [Pages::class, 'index']);

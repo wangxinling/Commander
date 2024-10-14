@@ -18321,7 +18321,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Message = backbone__WEBPACK_IMPORTED_MODULE_0__.Model.extend({
-    url: 'http://localhost/api/history',
+    urlRoot: 'http://localhost/api/history',
     defaults() {
         return {
             role: '',
@@ -18356,6 +18356,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var backbone__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! backbone */ "./node_modules/backbone/backbone.js");
 /* harmony import */ var _MessageView_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MessageView.js */ "./src/views/MessageView.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! underscore */ "./node_modules/underscore/modules/index-all.js");
+
 
 
 
@@ -18398,7 +18400,12 @@ const HistoryView = backbone__WEBPACK_IMPORTED_MODULE_0__.View.extend({
     },
 
     clean: function () {
-        this.model.reset()
+        if(this.model.length > 0) {
+            var modelsToDestroy = this.model.toArray();
+            underscore__WEBPACK_IMPORTED_MODULE_3__["default"].each(modelsToDestroy, function(message) {
+                    message.destroy();
+            });
+        };
     },
     
 });
@@ -18425,13 +18432,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const MessageView = backbone__WEBPACK_IMPORTED_MODULE_0__.View.extend({
+
+    tagName: 'div',
     
     template: underscore__WEBPACK_IMPORTED_MODULE_1__["default"].template('<div class="message-container <%= role %>" ><div class="message"><%= content %></div></div>'),
 
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        // print in console with el
-        console.log(this.el);
         return this;
     }
 
@@ -18688,4 +18695,4 @@ var history = new _views_HistoryView_js__WEBPACK_IMPORTED_MODULE_1__["default"](
 })();
 
 
-//# sourceMappingURL=index.4bbdc1fd2adcc07e4f88.js.map
+//# sourceMappingURL=index.e523b2b7b82d598621f9.js.map

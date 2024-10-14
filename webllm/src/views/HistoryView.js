@@ -1,6 +1,7 @@
 import {View} from 'backbone';
 import MessageView from './MessageView.js';
 import $ from "jquery";
+import _ from "underscore";
 
 
 const HistoryView = View.extend({
@@ -40,7 +41,12 @@ const HistoryView = View.extend({
     },
 
     clean: function () {
-        this.model.reset()
+        if(this.model.length > 0) {
+            var modelsToDestroy = this.model.toArray();
+            _.each(modelsToDestroy, function(message) {
+                    message.destroy();
+            });
+        };
     },
     
 });

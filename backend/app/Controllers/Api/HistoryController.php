@@ -38,9 +38,24 @@ class HistoryController extends ResourceController
         }
 
     }
-    // delete method to delete all history
-    public function deleteHistory(){
-        this->model->purgeDeleted();
-        return $this->response->setJSON(['status' => 'success', 'message' => 'All history deleted successfully']);
+    // delete method to delete one message
+    public function deleteHistory($message_id){
+        
+        $message = $this->model->find($message_id);
+
+        if(!empty($message)){
+
+            if($this->model->delete($message_id)){
+
+                return $this->response->setJSON(['status' => 'success', 'message' => 'deleted the message']);
+            }else{
+
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to delete the message']);
+            }
+        }else{
+
+            return $this->response->setJSON(['status' => 'error', 'message' => 'the message id is invailded']);
+        }
+        
     }
 }

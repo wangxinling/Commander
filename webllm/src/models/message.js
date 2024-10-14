@@ -2,7 +2,7 @@
 import {Model} from 'backbone';
 
 const Message = Model.extend({
-    url: 'http://localhost/api/history',
+    urlRoot: 'http://localhost/api/history',
     defaults() {
         return {
             role: '',
