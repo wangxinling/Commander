@@ -22,7 +22,7 @@ flowchart TB
         D
   end
  subgraph Database["Database"]
-        E["MySQL"]
+        E[["`MySQL`"]]
   end
     Views --> Models
     Routes --> Controller
@@ -32,10 +32,7 @@ flowchart TB
     C --> D
     D --> E
 
-    E@{ shape: cyl}
 ```
-
-
 
 Both CodeIgniter and Backbone follow the MVC pattern. However, in my demo, a full implementation of MVC isn't necessary. For example, I built the site as a single-page application, so the View layer on the backend doesn't have any real functionality. Additionally, since Backbone lacks a default controller layer, I plan to customize and extend it later. The controller layer allows the logic to be divided into smaller, more maintainable modules.
 
