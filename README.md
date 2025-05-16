@@ -49,7 +49,7 @@ flowchart TB
     Backbone -- Build --> HTML
     Backend("Backend") --> PHP("<i class="fa-brands fa-docker"></i> PHP Container")
     PHP -- Development Evironment --> CodeIgniter("CodeIgniter")
-    CodeIgniter --> Public("Public Pages") & DM("Database Miargation")
+    CodeIgniter --> Public("Public Pages") & DM("Database Migration")
     Public <--> HTML
     Database("Database") --> MySQL("<i class="fa-brands fa-docker"></i> MySQL Container") & PHPAdmin("<i class="fa-brands fa-docker"></i> PHPAdmin Container")
     MySQL ----> Histories("Histories")
